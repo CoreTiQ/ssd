@@ -52,10 +52,7 @@
     @apply lg:p-3              /* الشاشات الكبيرة */
            lg:text-base;
   }
-  .booking-price {
-    @apply hidden;  /* إخفاء في الجوال */
-    @apply md:block;  /* إظهار في الشاشات الكبيرة */
-  }
+
   /* Calendar Days */
   .calendar-day {
     @apply relative 
@@ -325,4 +322,8 @@
   .modal-content {
     @apply hidden;
   }
+}
+.booking-price {
+  @apply hidden;  /* إخفاء في الجوال */
+  @apply md:block;  /* إظهار في الشاشات الكبيرة */
 }
