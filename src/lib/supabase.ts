@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { useQuery } from '@tanstack/react-query';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -16,23 +15,17 @@ export type Booking = {
   created_at: string;
 };
 
-export function useBookings() {
-  return useQuery({
-    queryKey: ['bookings'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('*')
-        .order('date', { ascending: true });
-
-      if (error) throw error;
-      return data as Booking[];
-    },
-    staleTime: 1000 * 60,
-  });
-}
-
 export const bookingsApi = {
+  async getAll() {
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('date', { ascending: true });
+
+    if (error) throw error;
+    return data as Booking[];
+  },
+
   async create(booking: Omit<Booking, 'id' | 'created_at'>) {
     const { data, error } = await supabase
       .from('bookings')
