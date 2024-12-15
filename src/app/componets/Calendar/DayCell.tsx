@@ -24,31 +24,33 @@ export default function DayCell({ date, bookings, onClick }: DayCellProps) {
   const totalIncome = bookings.reduce((sum, b) => sum + b.price, 0);
 
   return (
-    <button
-      onClick={onClick}
-      className={`p-4 rounded-lg text-start transition hover:shadow-md
-        ${hasFullDay ? 'bg-red-50 border-2 border-red-200' : 'bg-white border border-gray-200'}`}
-    >
-      <div className="font-bold text-lg mb-2">{dayNumber}</div>
-      
-      {bookings.length > 0 ? (
-        <div className="space-y-2">
-          {(hasMorning || hasEvening) && !hasFullDay && (
-            <div className="flex gap-1 flex-wrap">
-              {hasMorning && <Badge variant="blue">صباحي</Badge>}
-              {hasEvening && <Badge variant="orange">مسائي</Badge>}
-            </div>
-          )}
-          {hasFullDay && <Badge variant="red">يوم كامل</Badge>}
-          {totalIncome > 0 && (
-            <div className="text-sm text-gray-600">
-              {totalIncome.toFixed(3)} د
-            </div>
-          )}
+<button
+  onClick={onClick}
+  className={`p-4 rounded-lg text-start transition hover:shadow-md
+    ${hasFullDay ? 'bg-red-50 border-2 border-red-200' : 'bg-white border border-gray-200'}`}
+>
+  <div className="font-bold text-lg mb-2">{dayNumber}</div>
+  
+  {bookings.length > 0 ? (
+    <div className="space-y-2">
+      {(hasMorning || hasEvening) && !hasFullDay && (
+        <div className="flex gap-1 flex-wrap">
+          {hasMorning && <Badge variant="blue">صباحي</Badge>}
+          {hasEvening && <Badge variant="orange">مسائي</Badge>}
         </div>
-      ) : (
-        <div className="text-sm text-gray-400">متاح</div>
       )}
-    </button>
+      {hasFullDay && <Badge variant="red">يوم كامل</Badge>}
+      {totalIncome > 0 && (
+        <div
+          className="text-sm text-gray-600 hidden md:block" // إخفاء السعر عند عرض الجوال
+        >
+          {totalIncome.toFixed(3)} د
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="text-sm text-gray-400">متاح</div>
+  )}
+</button>
   );
 }
