@@ -19,38 +19,25 @@
 
   /* Calendar Grid */
   .calendar-grid {
-    @apply grid grid-cols-7;
-    /* شاشات مختلفة الأحجام */
-    @apply gap-0.5;          /* الجوال الصغير < 360px */
-    @apply sm:gap-1;         /* الجوال 360px - 640px */
-    @apply md:gap-2;         /* التابلت 768px */
-    @apply lg:gap-4;         /* الشاشات الكبيرة */
+    @apply grid grid-cols-7 
+           gap-0.5;   /* مسافة صغيرة جداً للجوال */
+    @apply md:gap-4;  /* مسافة أكبر للشاشات الكبيرة */
   }
 
   .calendar-header {
     @apply text-center font-medium 
-    bg-white/10 rounded-lg 
-    text-white/90;
-    
-/* تحسين حجم النص والهوامش للجوال */
+           bg-white/10 rounded-lg 
+           text-white/90;
+           
+    /* تحسين حجم النص والهوامش للجوال */
     @apply p-1             /* هامش صغير */
-    text-[8px]      /* حجم خط صغير يناسب الجوال */
-    whitespace-normal  /* السماح بالتفاف النص */
-    leading-tight;     /* تقليل المسافة بين السطور */
-    
-  
-    /* أحجام مختلفة للنص والهوامش */
-    @apply p-0.5               /* الجوال الصغير */
-           text-[8px];
-  
-    @apply sm:p-1              /* الجوال */
-           sm:text-[10px];
-  
-    @apply md:p-2              /* التابلت */
-           md:text-xs;
-  
-    @apply lg:p-3              /* الشاشات الكبيرة */
-           lg:text-base;
+           text-[8px]      /* حجم خط صغير يناسب الجوال */
+           whitespace-normal  /* السماح بالتفاف النص */
+           leading-tight;     /* تقليل المسافة بين السطور */
+           
+    /* الشاشات الأكبر */
+    @apply md:p-2 
+           md:text-base;
   }
 
   /* Calendar Days */
