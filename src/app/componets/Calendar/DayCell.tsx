@@ -42,7 +42,7 @@ export default function DayCell({ date, bookings, onClick }: DayCellProps) {
           {hasFullDay && <Badge variant="red">يوم كامل</Badge>}
           {totalIncome > 0 && (
             <div className="text-sm text-gray-600">
-              {totalIncome.toFixed(3)} د.ك
+              {totalIncome.toFixed(3)} د
             </div>
           )}
         </div>
