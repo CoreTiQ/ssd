@@ -29,8 +29,15 @@
 
   .calendar-header {
     @apply text-center font-medium 
-           bg-white/10 rounded-lg 
-           text-white/90;
+    bg-white/10 rounded-lg 
+    text-white/90;
+    
+/* تحسين حجم النص والهوامش للجوال */
+    @apply p-1             /* هامش صغير */
+    text-[8px]      /* حجم خط صغير يناسب الجوال */
+    whitespace-normal  /* السماح بالتفاف النص */
+    leading-tight;     /* تقليل المسافة بين السطور */
+    
   
     /* أحجام مختلفة للنص والهوامش */
     @apply p-0.5               /* الجوال الصغير */
