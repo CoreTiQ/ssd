@@ -19,7 +19,15 @@ moment.locale('ar', {
     'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'
   ]
 });
-
+const days = [
+  'الأحد',
+  'الاثنين',
+  'الثلاثاء',
+  'الأربعاء',
+  'الخميس',
+  'الجمعة',
+  'السبت'
+];
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(moment());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -106,8 +114,9 @@ export default function Calendar() {
 
         {/* أيام الأسبوع */}
         <div className="calendar-grid mb-4">
-          {days.map(day => (
-            <div key={day} className="calendar-header">
+        {days.map(day => (
+  <div key={day} className="calendar-header">
+    {day}
               <span className="hidden sm:inline">{day}</span>
               <span className="sm:hidden">{day.slice(0, 1)}</span>
             </div>
