@@ -45,7 +45,6 @@
     @apply lg:p-3              /* الشاشات الكبيرة */
            lg:text-base;
   }
-  
 
   /* Calendar Days */
   .calendar-day {
@@ -316,24 +315,4 @@
   .modal-content {
     @apply hidden;
   }
-}
-.navigation-button {
-  @apply px-2 py-1           /* الجوال الصغير */
-         text-xs
-         rounded-lg;
-
-  @apply sm:px-3 sm:py-1.5   /* الجوال */
-         sm:text-sm;
-
-  @apply md:px-4 md:py-2     /* التابلت */
-         md:text-base;
-
-  @apply lg:px-6 lg:py-2.5   /* الشاشات الكبيرة */
-         lg:text-lg;
-}
-.booking-info {
-  @apply mt-1 text-[6px];     /* الجوال الصغير */
-  @apply sm:mt-2 sm:text-[8px]; /* الجوال */
-  @apply md:mt-3 md:text-xs;    /* التابلت */
-  @apply lg:mt-4 lg:text-sm;    /* الشاشات الكبيرة */
 }
