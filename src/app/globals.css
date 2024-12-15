@@ -19,28 +19,57 @@
 
   /* Calendar Grid */
   .calendar-grid {
-    @apply grid grid-cols-7 
-           gap-[2px] sm:gap-1 md:gap-4;
+    @apply grid grid-cols-7;
+    /* شاشات مختلفة الأحجام */
+    @apply gap-0.5;          /* الجوال الصغير < 360px */
+    @apply sm:gap-1;         /* الجوال 360px - 640px */
+    @apply md:gap-2;         /* التابلت 768px */
+    @apply lg:gap-4;         /* الشاشات الكبيرة */
   }
 
   .calendar-header {
     @apply text-center font-medium 
            bg-white/10 rounded-lg 
-           p-0.5 sm:p-2 md:p-3 
-           text-[8px] sm:text-xs md:text-base 
            text-white/90;
+  
+    /* أحجام مختلفة للنص والهوامش */
+    @apply p-0.5               /* الجوال الصغير */
+           text-[8px];
+  
+    @apply sm:p-1              /* الجوال */
+           sm:text-[10px];
+  
+    @apply md:p-2              /* التابلت */
+           md:text-xs;
+  
+    @apply lg:p-3              /* الشاشات الكبيرة */
+           lg:text-base;
   }
+  
 
   /* Calendar Days */
   .calendar-day {
     @apply relative 
-           bg-white/5 border border-white/10 
-           rounded-lg overflow-hidden
+           bg-white/5 
+           rounded-lg 
+           border border-white/10
            cursor-pointer
-           transition-all duration-300
-           hover:bg-white/10 hover:shadow-lg
-           min-h-[45px] sm:min-h-[70px] md:min-h-[100px]
-           p-0.5 sm:p-2 md:p-4;
+           transition-all duration-300;
+  
+    /* أحجام مختلفة للشاشات */
+    @apply min-h-[40px]        /* الجوال الصغير */
+           aspect-square
+           p-0.5;
+  
+    @apply sm:min-h-[50px]     /* الجوال */
+           sm:p-1;
+  
+    @apply md:min-h-[80px]     /* التابلت */
+           md:p-2
+           md:aspect-auto;
+  
+    @apply lg:min-h-[100px]    /* الشاشات الكبيرة */
+           lg:p-4;
   }
 
   .calendar-day.today {
@@ -54,12 +83,27 @@
 
   /* Day Number */
   .day-number {
-    @apply absolute top-0.5 right-0.5 
+    @apply absolute 
            flex items-center justify-center
            bg-white/10 rounded-full 
-           text-white font-medium
-           w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6
-           text-[8px] sm:text-xs md:text-sm;
+           text-white font-medium;
+  
+    /* مواقع وأحجام مختلفة */
+    @apply top-0.5 right-0.5   /* الجوال الصغير */
+           w-3.5 h-3.5
+           text-[8px];
+  
+    @apply sm:top-1 sm:right-1 /* الجوال */
+           sm:w-4 sm:h-4
+           sm:text-[10px];
+  
+    @apply md:top-2 md:right-2 /* التابلت */
+           md:w-5 md:h-5
+           md:text-xs;
+  
+    @apply lg:top-2 lg:right-2 /* الشاشات الكبيرة */
+           lg:w-6 lg:h-6
+           lg:text-sm;
   }
 
   /* Booking Types */
@@ -102,12 +146,21 @@
 
   /* Mobile Badge */
   .mobile-badge {
-    
-    @apply absolute bottom-1 left-1 right-1
-           flex justify-center items-center gap-1
-           py-0.5 rounded-sm text-[8px] 
+    @apply absolute
+           flex justify-center items-center gap-0.5
            bg-white/10 text-white/90
-           md:hidden;
+           rounded-sm py-0.5;
+  
+    /* مواقع وأحجام مختلفة */
+    @apply bottom-0.5 left-0.5 right-0.5  /* الجوال الصغير */
+           text-[6px];
+  
+    @apply sm:bottom-1 sm:left-1 sm:right-1 /* الجوال */
+           sm:text-[8px];
+  
+    @apply md:text-[10px];                /* التابلت */
+  
+    @apply lg:hidden;                     /* إخفاء في الشاشات الكبيرة */
   }
 
   /* Stats Cards */
@@ -263,4 +316,24 @@
   .modal-content {
     @apply hidden;
   }
+}
+.navigation-button {
+  @apply px-2 py-1           /* الجوال الصغير */
+         text-xs
+         rounded-lg;
+
+  @apply sm:px-3 sm:py-1.5   /* الجوال */
+         sm:text-sm;
+
+  @apply md:px-4 md:py-2     /* التابلت */
+         md:text-base;
+
+  @apply lg:px-6 lg:py-2.5   /* الشاشات الكبيرة */
+         lg:text-lg;
+}
+.booking-info {
+  @apply mt-1 text-[6px];     /* الجوال الصغير */
+  @apply sm:mt-2 sm:text-[8px]; /* الجوال */
+  @apply md:mt-3 md:text-xs;    /* التابلت */
+  @apply lg:mt-4 lg:text-sm;    /* الشاشات الكبيرة */
 }
