@@ -25,26 +25,16 @@
   }
 
   .calendar-header {
-    @apply text-center font-medium 
-           bg-white/10 rounded-lg 
+    @apply text-center 
+           font-medium 
+           bg-white/10 
+           rounded-lg 
            text-white/90
-           p-0.5             /* هامش أصغر للجوال */
-           text-[7px]        /* حجم خط صغير جداً للجوال للسماح بظهور النص كاملاً */
-           whitespace-normal /* السماح بالتفاف النص */
-           leading-none      /* إزالة المسافة بين السطور */
-           h-8;             /* ارتفاع ثابت */
-  
-    /* التدرج في الأحجام للشاشات الأكبر */
-    @apply sm:text-[9px]
-           sm:p-1
-           sm:h-10
-           
-           md:text-xs
-           md:p-2
-           md:h-12
-           
-           lg:text-sm
-           lg:h-14;
+           whitespace-nowrap    /* منع التفاف النص */
+           overflow-hidden      /* منع تجاوز النص */
+           text-ellipsis       /* إضافة نقاط عند تجاوز النص */
+           p-1                 /* هامش صغير */
+           leading-tight;      /* تقليل المسافة بين السطور */
   }
   /* Calendar Days */
   .calendar-day {
