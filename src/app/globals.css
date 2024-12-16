@@ -391,3 +391,14 @@
     @apply hidden;
   }
 }
+.mobile-badge {
+  @apply absolute bottom-0.5 left-0.5 right-0.5
+         flex items-center justify-center
+         bg-white/10 
+         rounded-sm py-0.5;
+}
+
+.booking-type {
+  @apply text-[8px] text-white/90
+         sm:text-[10px];
+}

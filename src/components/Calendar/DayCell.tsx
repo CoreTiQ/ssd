@@ -55,9 +55,7 @@ export default function DayCell({ date, bookings, onClick }: DayCellProps) {
             {totalIncome > 0 && (
               
               <div className="text-sm text-white/70 mt-1">
-                  <div className="booking-price">
                 {totalIncome.toFixed(3)} د
-                    </div>
               </div>
             )}
           </div>
@@ -72,16 +70,21 @@ export default function DayCell({ date, bookings, onClick }: DayCellProps) {
       <div className="block md:hidden">
         {bookings.length > 0 ? (
           <div className="mobile-badge">
-            {hasFullDay ? 'يوم كامل' : 
-             hasMorning && hasEvening ? 'ص/م' :
-             hasMorning ? 'صباحي' : 
-             hasEvening ? 'مسائي' : ''}
-             {totalIncome > 0 && (
-               <span className="text-[8px] mr-1">
-                 {totalIncome.toFixed(3)}
-               </span>
-             )}
-          </div>
+ {/* نوع الحجز */}
+ <span className="booking-type">
+   {hasFullDay ? 'يوم كامل' : 
+    hasMorning && hasEvening ? 'ص/م' :
+    hasMorning ? 'صباحي' : 
+    hasEvening ? 'مسائي' : ''}
+ </span>
+
+ {/* السعر - يظهر فقط في الشاشات المتوسطة والكبيرة */}
+ {totalIncome > 0 && (
+   <span className="hidden sm:inline-block text-[10px] mr-2">
+     {totalIncome.toFixed(3)} د.ك
+   </span>
+ )}
+</div>
         ) : (
           <div className="mobile-badge opacity-50">
             متاح
