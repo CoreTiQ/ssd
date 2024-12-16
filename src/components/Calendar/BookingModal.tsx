@@ -21,7 +21,6 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
     booking_type: 'morning',
     price: '',
     notes: '',
-    phone: '', // إضافة حقل الهاتف
     isFree: false
   });
 
@@ -183,20 +182,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
                 className="text-right"
               />
             </div>
-                {/* إضافة حقل الهاتف بعد اسم العميل */}
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-1">
-                    رقم الهاتف (اختياري)
-                  </label>
-                  <Input
-                    type="tel"
-                    value={form.phone}
-                    onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    placeholder="أدخل رقم الهاتف"
-                    className="text-left" // لتنسيق الرقم من اليسار
-                    dir="ltr" // لكتابة الرقم من اليسار لليمين
-                  />
-                </div>
+
             <div>
               <label className="block text-sm font-medium text-white/80 mb-1">
                 نوع الحجز
