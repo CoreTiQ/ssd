@@ -310,10 +310,7 @@
     @apply hidden;
   }
 }
-.booking-price {
-  @apply hidden;  /* إخفاء في الجوال */
-  @apply md:block;  /* إظهار في الشاشات الكبيرة */
-}
+
 /* Switch Styles */
 .switch-container {
   @apply flex items-center justify-between 
@@ -382,4 +379,15 @@
 
 .switch-button[data-checked="false"]:hover {
   @apply bg-gray-700;
+}
+/* إخفاء السعر للشاشات الصغيرة */
+.booking-price {
+  @apply hidden sm:block; /* إخفاء في الموبايل وإظهار في الشاشات الأكبر */
+}
+
+/* أو بشكل أكثر تحديداً */
+@media (max-width: 640px) { /* sm breakpoint في Tailwind */
+  .booking-price {
+    @apply hidden;
+  }
 }
