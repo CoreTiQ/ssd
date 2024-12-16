@@ -199,25 +199,25 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
               <label className="text-sm font-medium text-white/80">
                 حجز مجاني
               </label>
-              <Switch
-                checked={form.isFree}
-                onChange={(checked) => {
-                  setForm(f => ({ 
-                    ...f, 
-                    isFree: checked,
-                    price: checked ? '0' : f.price
-                  }));
-                }}
-                className={`${
-                  form.isFree ? 'bg-blue-600' : 'bg-gray-400'
-                } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
-              >
-                <span
-                  className={`${
-                    form.isFree ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                />
-              </Switch>
+              <div className="switch-container">
+  <span className="switch-label">
+    حجز مجاني
+  </span>
+  <Switch
+    checked={form.isFree}
+    onChange={(checked) => {
+      setForm(f => ({ 
+        ...f, 
+        isFree: checked,
+        price: checked ? '0' : f.price
+      }));
+    }}
+    className="switch-button"
+    data-checked={form.isFree}
+  >
+    <span className="switch-thumb" />
+  </Switch>
+</div>
             </div>
 
             <div>
