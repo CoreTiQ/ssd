@@ -197,7 +197,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
 
             <div className="flex items-center justify-between py-2">
               <label className="text-sm font-medium text-white/80">
-                حجز مجاني
+              
               </label>
               <div className="switch-container">
   <span className="switch-label">
