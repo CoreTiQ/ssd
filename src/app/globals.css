@@ -20,34 +20,49 @@
   /* Calendar Grid */
   .calendar-grid {
     @apply grid grid-cols-7 
-           gap-0.5        /* مسافة صغيرة بين الخلايا في الجوال */
-           sm:gap-1 
-           md:gap-2 
-           lg:gap-4;
+           gap-0.5;   /* مسافة صغيرة جداً للجوال */
+    @apply md:gap-4;  /* مسافة أكبر للشاشات الكبيرة */
   }
 
   .calendar-header {
-    @apply text-center 
-           font-medium 
-           bg-white/10 
-           rounded-lg 
-           text-white/90 
-           overflow-visible  /* مهم للسماح للنص بالظهور كاملاً */
-           text-[7px]       /* حجم خط أصغر للجوال */
-           leading-tight    /* تقليل ارتفاع السطر */
-           p-0.5;          /* هامش صغير */
-  
-    /* شاشات أكبر */
-    @apply sm:text-[10px] 
-           sm:p-1 
-           md:text-base 
-           md:p-2;
+    @apply text-center font-medium 
+           bg-white/10 rounded-lg 
+           text-white/90;
+           
+    /* تحسين حجم النص والهوامش للجوال */
+    @apply p-1             /* هامش صغير */
+           text-[8px]      /* حجم خط صغير يناسب الجوال */
+           whitespace-normal  /* السماح بالتفاف النص */
+           leading-tight;     /* تقليل المسافة بين السطور */
+           
+    /* الشاشات الأكبر */
+    @apply md:p-2 
+           md:text-base;
   }
 
   /* Calendar Days */
   .calendar-day {
-    @apply w-full;
-    max-width: 100%;     /* لضمان عدم تجاوز العرض */
+    @apply relative 
+           bg-white/5 
+           rounded-lg 
+           border border-white/10
+           cursor-pointer
+           transition-all duration-300;
+  
+    /* أحجام مختلفة للشاشات */
+    @apply min-h-[40px]        /* الجوال الصغير */
+           aspect-square
+           p-0.5;
+  
+    @apply sm:min-h-[50px]     /* الجوال */
+           sm:p-1;
+  
+    @apply md:min-h-[80px]     /* التابلت */
+           md:p-2
+           md:aspect-auto;
+  
+    @apply lg:min-h-[100px]    /* الشاشات الكبيرة */
+           lg:p-4;
   }
 
   .calendar-day.today {
