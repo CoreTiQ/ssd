@@ -53,8 +53,11 @@ export default function DayCell({ date, bookings, onClick }: DayCellProps) {
             )}
             {/* السعر */}
             {totalIncome > 0 && (
+              
               <div className="text-sm text-white/70 mt-1">
+                  <div className="booking-price">
                 {totalIncome.toFixed(3)} د
+                    </div>
               </div>
             )}
           </div>
