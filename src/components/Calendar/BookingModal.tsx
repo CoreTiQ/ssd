@@ -3,7 +3,7 @@
 import { Dialog } from '@headlessui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -22,9 +22,61 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
     notes: ''
   });
 
+  const [availableTypes, setAvailableTypes] = useState([
+    { value: 'morning', label: 'صباحي' },
+    { value: 'evening', label: 'مسائي' },
+    { value: 'full', label: 'يوم كامل' }
+  ]);
+
   const queryClient = useQueryClient();
 
-  // التحقق من الحجوزات المتاحة
+  const getAvailableBookingTypes = async () => {
+    const { data: existingBookings } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('date', date);
+
+    const allTypes = [
+      { value: 'morning', label: 'صباحي' },
+      { value: 'evening', label: 'مسائي' },
+      { value: 'full', label: 'يوم كامل' }
+    ];
+
+    if (!existingBookings || existingBookings.length === 0) {
+      return allTypes;
+    }
+
+    const hasFullDay = existingBookings.some(b => b.booking_type === 'full');
+    const hasMorning = existingBookings.some(b => b.booking_type === 'morning');
+    const hasEvening = existingBookings.some(b => b.booking_type === 'evening');
+
+    if (hasFullDay) {
+      return [];
+    }
+
+    if (hasMorning) {
+      return [{ value: 'evening', label: 'مسائي' }];
+    }
+
+    if (hasEvening) {
+      return [{ value: 'morning', label: 'صباحي' }];
+    }
+
+    return allTypes;
+  };
+
+  useEffect(() => {
+    const loadAvailableTypes = async () => {
+      const types = await getAvailableBookingTypes();
+      setAvailableTypes(types);
+      if (types.length === 1) {
+        setForm(f => ({ ...f, booking_type: types[0].value }));
+      }
+    };
+
+    loadAvailableTypes();
+  }, [date]);
+
   const checkExistingBookings = async () => {
     const { data: existingBookings } = await supabase
       .from('bookings')
@@ -36,38 +88,14 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
       const morningBooking = existingBookings.find(b => b.booking_type === 'morning');
       const eveningBooking = existingBookings.find(b => b.booking_type === 'evening');
 
-      // إذا كان هناك حجز ليوم كامل
       if (hasFullDay) {
         throw new Error('هذا اليوم محجوز بالكامل');
       }
 
-      // إذا كان الحجز المطلوب هو يوم كامل
-      if (form.booking_type === 'full') {
-        if (morningBooking || eveningBooking) {
-          throw new Error('لا يمكن إضافة حجز يوم كامل، يوجد حجوزات جزئية');
-        }
+      if (form.booking_type === 'full' && (morningBooking || eveningBooking)) {
+        throw new Error('لا يمكن إضافة حجز يوم كامل، يوجد حجوزات جزئية');
       }
 
-      // التحقق من حجوزات نفس العميل
-      if (morningBooking) {
-        // إذا كان هناك حجز صباحي
-        if (form.booking_type === 'evening') {
-          if (morningBooking.client_name !== form.client_name) {
-            throw new Error('عذراً، يجب أن يكون الحجز المسائي لنفس الشخص الذي حجز الفترة الصباحية');
-          }
-        }
-      }
-
-      if (eveningBooking) {
-        // إذا كان هناك حجز مسائي
-        if (form.booking_type === 'morning') {
-          if (eveningBooking.client_name !== form.client_name) {
-            throw new Error('عذراً، يجب أن يكون الحجز الصباحي لنفس الشخص الذي حجز الفترة المسائية');
-          }
-        }
-      }
-
-      // التحقق من الفترات المحجوزة
       if (form.booking_type === 'morning' && morningBooking) {
         throw new Error('الفترة الصباحية محجوزة مسبقاً');
       }
@@ -82,10 +110,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
 
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      // التحقق من الحجوزات أولاً
       await checkExistingBookings();
-
-      // إضافة الحجز إذا كان متاحاً
       const { data, error } = await supabase
         .from('bookings')
         .insert([{
@@ -133,8 +158,13 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
       
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="modal-content w-full max-w-md">
-          <Dialog.Title className="text-xl font-bold text-white mb-6">
-            إضافة حجز جديد - {date}
+          <Dialog.Title className="text-xl font-bold text-white mb-6 text-center">
+            إضافة حجز جديد - {new Date(date).toLocaleDateString('ar-SA', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -148,6 +178,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
                 onChange={e => setForm(f => ({ ...f, client_name: e.target.value }))}
                 placeholder="أدخل اسم العميل"
                 required
+                className="text-right"
               />
             </div>
 
@@ -158,11 +189,8 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
               <Select
                 value={form.booking_type}
                 onChange={e => setForm(f => ({ ...f, booking_type: e.target.value }))}
-                options={[
-                  { value: 'morning', label: 'صباحي' },
-                  { value: 'evening', label: 'مسائي' },
-                  { value: 'full', label: 'يوم كامل' }
-                ]}
+                options={availableTypes}
+                disabled={availableTypes.length === 1}
               />
             </div>
 
@@ -178,6 +206,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
                 onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
                 placeholder="0.000"
                 required
+                className="text-right"
               />
             </div>
 
@@ -190,6 +219,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
                 value={form.notes}
                 onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder="أضف أي ملاحظات إضافية"
+                className="text-right"
               />
             </div>
 
