@@ -159,12 +159,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="modal-content w-full max-w-md">
           <Dialog.Title className="text-xl font-bold text-white mb-6 text-center">
-            إضافة حجز جديد - {new Date(date).toLocaleDateString('ar-SA', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
+          {` ${moment(date).format('YYYY-MM-DD')}`}
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
