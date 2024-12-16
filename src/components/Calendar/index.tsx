@@ -106,14 +106,12 @@ export default function Calendar() {
 
         {/* أيام الأسبوع */}
         <div className="calendar-grid mb-4">
-  {days.map(day => (
-    <div key={day} className="calendar-header text-[6.5px] sm:text-xs">
-      {day}
-    </div>
-  ))}
-</div>
-          ))}
-        </div>
+           {days.map(day => (
+             <div key={day} className="calendar-header text-[6.5px] sm:text-xs">
+              {day}
+            </div>
+            ))}
+            </div>
 
         {/* شبكة التقويم */}
         <div className="calendar-grid">
