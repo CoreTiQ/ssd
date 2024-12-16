@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog } from '@headlessui/react';
+import { Dialog, Switch } from '@headlessui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+import moment from 'moment';
 
 interface BookingModalProps {
   date: string;
@@ -19,7 +20,8 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
     client_name: '',
     booking_type: 'morning',
     price: '',
-    notes: ''
+    notes: '',
+    isFree: false
   });
 
   const [availableTypes, setAvailableTypes] = useState([
@@ -117,8 +119,9 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
           client_name: form.client_name,
           date,
           booking_type: form.booking_type,
-          price: Number(form.price),
-          notes: form.notes
+          price: form.isFree ? 0 : Number(form.price),
+          notes: form.notes,
+          is_free: form.isFree
         }])
         .select()
         .single();
@@ -144,7 +147,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
       return;
     }
 
-    if (!form.price || Number(form.price) <= 0) {
+    if (!form.isFree && (!form.price || Number(form.price) <= 0)) {
       toast.error('الرجاء إدخال سعر صحيح');
       return;
     }
@@ -158,8 +161,11 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
       
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="modal-content w-full max-w-md">
-        <Dialog.Title className="text-xl font-bold text-white mb-6 text-center">
-          إضافة حجز جديد - {date}
+          <Dialog.Title className="text-xl font-bold text-white mb-6 text-center">
+            إضافة حجز جديد
+            <div className="text-lg font-normal text-white/80 mt-2">
+              {moment(date).format('YYYY-MM-DD')}
+            </div>
           </Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -189,6 +195,31 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
               />
             </div>
 
+            <div className="flex items-center justify-between py-2">
+              <label className="text-sm font-medium text-white/80">
+                حجز مجاني
+              </label>
+              <Switch
+                checked={form.isFree}
+                onChange={(checked) => {
+                  setForm(f => ({ 
+                    ...f, 
+                    isFree: checked,
+                    price: checked ? '0' : f.price
+                  }));
+                }}
+                className={`${
+                  form.isFree ? 'bg-blue-600' : 'bg-gray-400'
+                } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+              >
+                <span
+                  className={`${
+                    form.isFree ? 'translate-x-6' : 'translate-x-1'
+                  } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                />
+              </Switch>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-white/80 mb-1">
                 السعر (د.ك)
@@ -197,11 +228,12 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
                 type="number"
                 step="0.001"
                 min="0"
-                value={form.price}
+                value={form.isFree ? '0' : form.price}
                 onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
                 placeholder="0.000"
                 required
                 className="text-right"
+                disabled={form.isFree}
               />
             </div>
 

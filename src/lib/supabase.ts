@@ -6,72 +6,86 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUz
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export type Booking = {
-  id: number;
-  client_name: string;
-  date: string;
-  booking_type: 'morning' | 'evening' | 'full';
-  price: number;
-  notes?: string;
-  created_at: string;
+ id: number;
+ client_name: string;
+ date: string;
+ booking_type: 'morning' | 'evening' | 'full';
+ price: number;
+ notes?: string;
+ created_at: string;
+ is_free: boolean; // إضافة حقل الحجز المجاني
 };
 
 // Database functions
 export const db = {
-  bookings: {
-    async getAll() {
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('*')
-        .order('date', { ascending: true });
-
-      if (error) throw error;
-      return data as Booking[];
-    },
-
-    async create(booking: Omit<Booking, 'id' | 'created_at'>) {
+ bookings: {
+   async getAll() {
      const { data, error } = await supabase
-        .from('bookings')
-        .insert([booking])
-        .select()
-        .single();
+       .from('bookings')
+       .select('*')
+       .order('date', { ascending: true });
 
-      if (error) throw error;
-      return data;
-    },
+     if (error) throw error;
+     return data as Booking[];
+   },
 
-        // ... الوظائف السابقة
-      
-  async getByDate(date: string) {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('date', date);
+   async create(booking: Omit<Booking, 'id' | 'created_at'>) {
+     const { data, error } = await supabase
+       .from('bookings')
+       .insert([{
+         ...booking,
+         price: booking.is_free ? 0 : booking.price // التأكد من أن السعر 0 إذا كان الحجز مجانياً
+       }])
+       .select()
+       .single();
 
-    if (error) throw error;
-    return data as Booking[];
-  },
+     if (error) throw error;
+     return data;
+   },
+     
+   async getByDate(date: string) {
+     const { data, error } = await supabase
+       .from('bookings')
+       .select('*')
+       .eq('date', date);
 
-    async delete(id: number) {
-      const { error } = await supabase
-        .from('bookings')
-        .delete()
-        .eq('id', id);
+     if (error) throw error;
+     return data as Booking[];
+   },
 
-      if (error) throw error;
-    }
-  }
+   async delete(id: number) {
+     const { error } = await supabase
+       .from('bookings')
+       .delete()
+       .eq('id', id);
+
+     if (error) throw error;
+   }
+ }
 };
 
 // Helper function to check if a date slot is available
 export async function isSlotAvailable(date: string, type: 'morning' | 'evening' | 'full') {
-  const { data, error } = await supabase
-    .from('bookings')
-    .select('booking_type')
-    .eq('date', date);
+ const { data, error } = await supabase
+   .from('bookings')
+   .select('booking_type')
+   .eq('date', date);
 
-  if (error) throw error;
+ if (error) throw error;
 
-  if (data.length === 0) return true;
-  if (type === 'full' || data.some(b => b.booking_type === 'full')) return false;
-  return !data.some(b => b.booking_type === type);
+ if (data.length === 0) return true;
+ 
+ // التحقق من الحجوزات الموجودة
+ const hasFullDay = data.some(b => b.booking_type === 'full');
+ const hasMorning = data.some(b => b.booking_type === 'morning');
+ const hasEvening = data.some(b => b.booking_type === 'evening');
+
+ // إذا كان هناك حجز ليوم كامل، لا يمكن إضافة أي حجز
+ if (hasFullDay) return false;
+
+ // إذا كان الحجز المطلوب ليوم كامل، يجب ألا يكون هناك أي حجوزات أخرى
+ if (type === 'full') return !hasMorning && !hasEvening;
+
+ // التحقق من نوع الحجز المطلوب
+ return type === 'morning' ? !hasMorning : !hasEvening;
 }
