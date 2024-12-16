@@ -27,19 +27,25 @@
   .calendar-header {
     @apply text-center font-medium 
            bg-white/10 rounded-lg 
-           text-white/90;
+           text-white/90
+           p-0.5             /* هامش أصغر للجوال */
+           text-[7px]        /* حجم خط صغير جداً للجوال للسماح بظهور النص كاملاً */
+           whitespace-normal /* السماح بالتفاف النص */
+           leading-none      /* إزالة المسافة بين السطور */
+           h-8;             /* ارتفاع ثابت */
+  
+    /* التدرج في الأحجام للشاشات الأكبر */
+    @apply sm:text-[9px]
+           sm:p-1
+           sm:h-10
            
-    /* تحسين حجم النص والهوامش للجوال */
-    @apply p-1             /* هامش صغير */
-           text-[8px]      /* حجم خط صغير يناسب الجوال */
-           whitespace-normal  /* السماح بالتفاف النص */
-           leading-tight;     /* تقليل المسافة بين السطور */
+           md:text-xs
+           md:p-2
+           md:h-12
            
-    /* الشاشات الأكبر */
-    @apply md:p-2 
-           md:text-base;
+           lg:text-sm
+           lg:h-14;
   }
-
   /* Calendar Days */
   .calendar-day {
     @apply relative 
