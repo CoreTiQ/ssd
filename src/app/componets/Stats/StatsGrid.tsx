@@ -28,7 +28,7 @@ export default function StatsGrid() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
       <StatsCard
         title="إجمالي الدخل"
-        value={`${stats.totalIncome.toFixed(3)} د.ك`}
+        value={`${stats.totalIncome.toFixed(3)} د`}
         icon={BanknotesIcon}
         trend={stats.incomeTrend}
       />

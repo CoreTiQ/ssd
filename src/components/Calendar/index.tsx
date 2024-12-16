@@ -161,7 +161,7 @@ export default function Calendar() {
           <div className="glass-card">
             <div className="text-white/60 text-xs sm:text-sm">الدخل</div>
             <div className="stats-value">
-              {calculateTotalIncome()} د.ك
+              {calculateTotalIncome()} د
             </div>
           </div>
 

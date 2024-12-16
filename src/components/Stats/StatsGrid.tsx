@@ -39,7 +39,7 @@ export default function StatsGrid() {
     <div className="stats-grid">
       <StatsCard
         title="إجمالي الدخل"
-        value={`${stats.income.value} د.ك`}
+        value={`${stats.income.value} د`}
         comparison={stats.income.comparison}
       />
       <StatsCard

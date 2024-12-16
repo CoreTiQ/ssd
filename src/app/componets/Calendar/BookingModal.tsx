@@ -85,7 +85,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">السعر (د.ك)</label>
+              <label className="block text-sm font-medium mb-1">السعر (د)</label>
               <Input
                 type="number"
                 step="0.001"

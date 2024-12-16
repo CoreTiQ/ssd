@@ -222,7 +222,7 @@ export default function BookingModal({ date, onClose }: BookingModalProps) {
 
             <div>
               <label className="block text-sm font-medium text-white/80 mb-1">
-                السعر (د.ك)
+                السعر (د)
               </label>
               <Input
                 type="number"

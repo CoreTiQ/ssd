@@ -59,7 +59,7 @@ export default function DayDetailsModal({ date, bookings, onClose, onAddBooking 
                       )}
                     </div>
                     <div className="text-right">
-                      <div className="text-white font-medium">{booking.price.toFixed(3)} د.ك</div>
+                      <div className="text-white font-medium">{booking.price.toFixed(3)} د</div>
                     </div>
                   </div>
                 </div>
@@ -68,7 +68,7 @@ export default function DayDetailsModal({ date, bookings, onClose, onAddBooking 
               <div className="border-t border-white/10 mt-4 pt-4">
                 <div className="flex justify-between text-lg">
                   <span>الإجمالي</span>
-                  <span className="font-bold text-white">{totalIncome.toFixed(3)} د.ك</span>
+                  <span className="font-bold text-white">{totalIncome.toFixed(3)} د</span>
                 </div>
               </div>
             </div>
