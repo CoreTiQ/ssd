@@ -1,7 +1,14 @@
 import Calendar from '@/components/Calendar';
 import StatsGrid from '@/components/Stats/StatsGrid';
+import { useQuery } from '@tanstack/react-query';
+import { db } from '@/lib/supabase';
 
 export default function Home() {
+  const { data: expenses = [] } = useQuery({
+    queryKey: ['expenses'],
+    queryFn: () => db.expenses.getAll()
+  });
+
   return (
     <main className="container mx-auto p-4 max-w-7xl">
       {/* <header className="text-center mb-8">
@@ -10,7 +17,7 @@ export default function Home() {
       </header> */}
     
       <Calendar />
-      <StatsGrid />
+      <StatsGrid expenses={expenses} />
     </main>
   );
 }
