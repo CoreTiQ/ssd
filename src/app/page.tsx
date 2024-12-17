@@ -8,7 +8,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">نظام حجز الفيلا</h1>
         <p className="text-gray-600">نظام إدارة الحجوزات والمدفوعات</p>
       </header> */}
-        
+    
       <Calendar />
       <StatsGrid />
     </main>
