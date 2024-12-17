@@ -398,3 +398,254 @@
   @apply text-[8px] text-white/90
          sm:text-[10px];
 }
+
+/* أنماط صفحة المصروفات */
+.expenses-container {
+  @apply space-y-6;
+}
+
+/* بطاقة المصروفات */
+.expense-card {
+  @apply bg-white/5 backdrop-blur-lg 
+         rounded-xl border border-white/10
+         p-4 transition-all duration-300
+         hover:bg-white/10;
+}
+
+.expense-header {
+  @apply flex justify-between items-start;
+}
+
+.expense-title {
+  @apply font-medium text-white;
+}
+
+.expense-amount {
+  @apply text-lg font-medium text-white;
+}
+
+.expense-notes {
+  @apply text-sm text-white/60 mt-1;
+}
+
+.expense-date {
+  @apply text-sm text-white/60;
+}
+
+/* تصنيفات المصروفات */
+.expense-category {
+  @apply text-xs px-2 py-1 rounded-full mt-2
+         inline-block;
+}
+
+.expense-category-maintenance {
+  @apply bg-blue-500/20 text-blue-200;
+}
+
+.expense-category-utilities {
+  @apply bg-green-500/20 text-green-200;
+}
+
+.expense-category-cleaning {
+  @apply bg-yellow-500/20 text-yellow-200;
+}
+
+.expense-category-other {
+  @apply bg-purple-500/20 text-purple-200;
+}
+
+/* أزرار التحكم */
+.expense-actions {
+  @apply flex gap-2;
+}
+
+.expense-action-button {
+  @apply p-1 rounded transition-all duration-200
+         hover:bg-white/10;
+}
+
+.expense-delete-button {
+  @apply text-red-400 hover:text-red-300;
+}
+
+/* نموذج إضافة/تعديل المصروفات */
+.expense-form {
+  @apply space-y-4;
+}
+
+.expense-form-group {
+  @apply space-y-1;
+}
+
+.expense-form-label {
+  @apply block text-sm font-medium text-white/80;
+}
+
+.expense-form-input {
+  @apply w-full bg-white/10 
+         border border-white/20
+         rounded-lg px-4 py-2.5
+         text-white placeholder:text-white/40
+         focus:border-blue-500
+         focus:ring-2 focus:ring-blue-500/20;
+}
+
+/* إحصائيات المصروفات */
+.expenses-stats-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4 mb-8;
+}
+
+.expenses-stats-card {
+  @apply bg-white/5 backdrop-blur-lg 
+         rounded-xl border border-white/10
+         p-6 transition-all duration-300
+         hover:bg-white/10;
+}
+
+.expenses-stats-title {
+  @apply text-sm text-white/60 mb-1;
+}
+
+.expenses-stats-value {
+  @apply text-2xl font-bold text-white;
+}
+
+.expenses-stats-trend {
+  @apply flex items-center gap-1 mt-2 text-sm;
+}
+
+.expenses-stats-trend-up {
+  @apply text-green-400;
+}
+
+.expenses-stats-trend-down {
+  @apply text-red-400;
+}
+
+/* تصنيف المصروفات */
+.expenses-categories {
+  @apply grid grid-cols-1 md:grid-cols-4 gap-4 mb-8;
+}
+
+.category-card {
+  @apply bg-white/5 backdrop-blur-lg 
+         rounded-xl p-4
+         border border-white/10;
+}
+
+.category-label {
+  @apply text-sm text-white/60;
+}
+
+.category-amount {
+  @apply text-xl font-bold mt-1 text-white;
+}
+
+/* نافذة إضافة/تعديل المصروفات */
+.expense-modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50;
+}
+
+.expense-modal-container {
+  @apply fixed inset-0 
+         flex items-center justify-center 
+         p-4 z-50;
+}
+
+.expense-modal-content {
+  @apply w-full max-w-md
+         bg-gray-900/95 backdrop-blur-xl
+         rounded-2xl p-6
+         border border-white/10
+         shadow-xl;
+}
+
+.expense-modal-header {
+  @apply text-xl font-bold text-white mb-6 text-center;
+}
+
+.expense-modal-footer {
+  @apply flex justify-end gap-2 
+         mt-6 pt-4
+         border-t border-white/10;
+}
+
+/* زر إضافة مصروف جديد */
+.add-expense-button {
+  @apply bg-white/10 hover:bg-white/20
+         text-white font-medium
+         px-4 py-2 rounded-lg
+         transition-all duration-200
+         flex items-center gap-2;
+}
+
+/* جدول المصروفات الشهري */
+.monthly-expenses {
+  @apply space-y-4;
+}
+
+.month-header {
+  @apply flex justify-between items-center mb-4;
+}
+
+.month-title {
+  @apply text-xl font-bold text-white;
+}
+
+/* التنقل بين الأشهر */
+.month-navigation {
+  @apply flex gap-2;
+}
+
+.month-nav-button {
+  @apply bg-white/10 hover:bg-white/20
+         text-white
+         p-2 rounded-lg
+         transition-all duration-200;
+}
+
+/* حالات تحميل البيانات */
+.expenses-loading {
+  @apply animate-pulse space-y-4;
+}
+
+.expense-skeleton {
+  @apply h-24 bg-white/5 rounded-xl;
+}
+
+/* رسائل الحالة */
+.no-expenses {
+  @apply text-center py-8 text-white/60;
+}
+
+/* التصفية والبحث */
+.expenses-filters {
+  @apply flex flex-wrap gap-4 mb-6;
+}
+
+.expenses-search {
+  @apply flex-1 min-w-[200px];
+}
+
+.expenses-filter-select {
+  @apply bg-white/10 border border-white/20
+         text-white rounded-lg
+         px-4 py-2;
+}
+
+/* طباعة المصروفات */
+@media print {
+  .expense-card {
+    @apply bg-white border-gray-200 
+           print:break-inside-avoid
+           text-black;
+  }
+
+  .expense-category {
+    @apply border border-current;
+  }
+
+  .no-print {
+    @apply hidden;
+  }
+}
