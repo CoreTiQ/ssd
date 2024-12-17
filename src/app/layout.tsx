@@ -2,26 +2,24 @@ import './globals.css';
 import { Providers } from '@/components/Providers';
 import { Toaster } from 'react-hot-toast';
 import localFont from 'next/font/local';
+import Navigation from '@/components/Navigation';
 
 const font = localFont({
   src: './fonts/Cairo-Arabic-Variable.ttf',
   variable: '--font-cairo'
 });
 
-export const metadata = {
-  title: 'نظام حجز الفيلا',
-  description: 'نظام إدارة حجوزات وإيجارات الفيلا اليومية',
-  viewport: 'width=device-width, initial-scale=1',
-};
+// فصل إعدادات viewport عن metadata
 export const viewport = {
   width: 'device-width',
-  initialScale: 1
+  initialScale: 1,
 };
 
 export const metadata = {
   title: 'نظام حجز الفيلا',
   description: 'نظام إدارة حجوزات وإيجارات الفيلا اليومية',
 };
+
 export default function RootLayout({
   children,
 }: {
@@ -31,7 +29,10 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={font.className}>
       <body className="bg-gradient">
         <Providers>
-          {children}
+          <main className="pb-20">
+            {children}
+          </main>
+          <Navigation />
           <Toaster 
             position="bottom-center"
             toastOptions={{
