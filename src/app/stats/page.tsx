@@ -113,34 +113,31 @@ export default function StatsPage() {
     title="إجمالي الدخل"
     value={`${totalIncome.toFixed(3)} د`}
     icon={BanknotesIcon}
-    trend={{
-      value: 0,
-      isPositive: true
-    }}
+    showTrend={true}
+    isPositive={true}
+    trendValue={5.2}
   />
   <StatsCard
     title="صافي الربح"
     value={`${netProfit.toFixed(3)} د`}
     icon={ArrowTrendingUpIcon}
-    trend={{
-      value: 0,
-      isPositive: netProfit > 0
-    }}
+    showTrend={true}
+    isPositive={netProfit > 0}
+    trendValue={Math.abs(((netProfit / totalIncome) * 100) || 0)}
   />
   <StatsCard
     title="المصروفات"
     value={`${totalExpenses.toFixed(3)} د`}
     icon={ArrowTrendingDownIcon}
-    trend={{
-      value: 0,
-      isPositive: false
-    }}
+    showTrend={true}
+    isPositive={false}
+    trendValue={3.1}
   />
   <StatsCard
     title="عدد الحجوزات"
     value={String(bookings.length)}
     icon={ChartBarIcon}
-    trend={null} // استخدام null لإخفاء مؤشر الاتجاه
+    showTrend={false}
   />
 </div>
 
