@@ -2,19 +2,19 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { db } from '@/lib/supabase';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-} from 'chart.js';
 import moment from 'moment';
-import { Line, Bar } from 'react-chartjs-2';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend,
+  BarChart,
+  Bar,
+  ResponsiveContainer 
+} from 'recharts';
 import { calculateStats } from '@/lib/utils';
 import StatsCard from '@/components/Stats/StatsCard';
 import {
@@ -23,18 +23,6 @@ import {
   TrendingDownIcon,
   ChartBarIcon,
 } from '@heroicons/react/24/outline';
-
-// تسجيل مكونات الرسم البياني
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 export default function StatsPage() {
   const { data: bookings = [] } = useQuery({
@@ -51,45 +39,30 @@ export default function StatsPage() {
   const monthlyData = bookings.reduce((acc, booking) => {
     const month = moment(booking.date).format('YYYY-MM');
     if (!acc[month]) {
-      acc[month] = { income: 0, bookings: 0, expenses: 0 };
+      acc[month] = { month, income: 0, bookings: 0, expenses: 0 };
     }
     acc[month].income += booking.price;
     acc[month].bookings += 1;
     return acc;
-  }, {} as Record<string, { income: number; bookings: number; expenses: number }>);
+  }, {} as Record<string, { month: string; income: number; bookings: number; expenses: number }>);
 
   // إضافة المصروفات إلى البيانات الشهرية
   expenses.forEach(expense => {
     const month = moment(expense.date).format('YYYY-MM');
     if (!monthlyData[month]) {
-      monthlyData[month] = { income: 0, bookings: 0, expenses: 0 };
+      monthlyData[month] = { month, income: 0, bookings: 0, expenses: 0 };
     }
     monthlyData[month].expenses += expense.amount;
   });
 
-  // ترتيب البيانات حسب الشهر
-  const sortedMonths = Object.keys(monthlyData).sort();
-  
-  // تحضير بيانات الرسم البياني
-  const chartData = {
-    labels: sortedMonths.map(month => moment(month).format('MMMM YYYY')),
-    datasets: [
-      {
-        label: 'الدخل',
-        data: sortedMonths.map(month => monthlyData[month].income),
-        borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-        tension: 0.4,
-      },
-      {
-        label: 'المصروفات',
-        data: sortedMonths.map(month => monthlyData[month].expenses),
-        borderColor: 'rgb(239, 68, 68)',
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-        tension: 0.4,
-      }
-    ]
-  };
+  // تحويل البيانات إلى مصفوفة مرتبة
+  const chartData = Object.values(monthlyData).sort((a, b) => 
+    moment(a.month).diff(moment(b.month))
+  ).map(data => ({
+    ...data,
+    month: moment(data.month).format('MMMM YYYY'),
+    netProfit: data.income - data.expenses
+  }));
 
   // إحصائيات إجمالية
   const stats = calculateStats(bookings, expenses);
@@ -131,54 +104,59 @@ export default function StatsPage() {
       <div className="space-y-8">
         {/* رسم بياني للدخل والمصروفات */}
         <div className="glass-container">
-          <h2 className="text-xl font-bold mb-4">تحليل الدخل والمصروفات</h2>
-          <div className="h-[400px]">
-            <Line
-              data={chartData}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      callback: value => `${value} د`
-                    }
-                  }
-                },
-                plugins: {
-                  legend: {
-                    position: 'top' as const,
-                  }
-                }
-              }}
-            />
+          <h2 className="text-xl font-bold mb-4 text-white">تحليل الدخل والمصروفات</h2>
+          <div className="h-[400px] text-white">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none' }} />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="income" 
+                  name="الدخل"
+                  stroke="#22c55e" 
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="expenses" 
+                  name="المصروفات"
+                  stroke="#ef4444" 
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="netProfit" 
+                  name="صافي الربح"
+                  stroke="#3b82f6" 
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
         {/* رسم بياني للحجوزات */}
         <div className="glass-container">
-          <h2 className="text-xl font-bold mb-4">إحصائيات الحجوزات</h2>
+          <h2 className="text-xl font-bold mb-4 text-white">إحصائيات الحجوزات</h2>
           <div className="h-[400px]">
-            <Bar
-              data={{
-                labels: sortedMonths.map(month => moment(month).format('MMMM YYYY')),
-                datasets: [{
-                  label: 'عدد الحجوزات',
-                  data: sortedMonths.map(month => monthlyData[month].bookings),
-                  backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                }]
-              }}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: 'top' as const,
-                  }
-                }
-              }}
-            />
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none' }} />
+                <Legend />
+                <Bar 
+                  dataKey="bookings" 
+                  name="عدد الحجوزات"
+                  fill="#3b82f6" 
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
