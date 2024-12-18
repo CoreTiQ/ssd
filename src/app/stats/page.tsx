@@ -107,45 +107,42 @@ export default function StatsPage() {
     <main className="container mx-auto p-4 max-w-7xl space-y-6">
       <h1 className="text-2xl font-bold text-white">لوحة الإحصائيات</h1>
 
-      {/* البطاقات الإحصائية */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatsCard
-          title="إجمالي الدخل"
-          value={`${totalIncome.toFixed(3)} د`}
-          icon={BanknotesIcon}
-          trend={{
-            value: 0,
-            isPositive: true
-          }}
-        />
-        <StatsCard
-          title="صافي الربح"
-          value={`${netProfit.toFixed(3)} د`}
-          icon={ArrowTrendingUpIcon}
-          trend={{
-            value: 0,
-            isPositive: netProfit > 0
-          }}
-        />
-        <StatsCard
-          title="المصروفات"
-          value={`${totalExpenses.toFixed(3)} د`}
-          icon={ArrowTrendingDownIcon}
-          trend={{
-            value: 0,
-            isPositive: false
-          }}
-        />
-        <StatsCard
-          title="عدد الحجوزات"
-          value={String(bookings.length)}
-          icon={ChartBarIcon}
-          trend={{
-            value: 0,
-            isPositive: true
-          }}
-        />
-      </div>
+{/* البطاقات الإحصائية */}
+<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+  <StatsCard
+    title="إجمالي الدخل"
+    value={`${totalIncome.toFixed(3)} د`}
+    icon={BanknotesIcon}
+    trend={{
+      value: 0,
+      isPositive: true
+    }}
+  />
+  <StatsCard
+    title="صافي الربح"
+    value={`${netProfit.toFixed(3)} د`}
+    icon={ArrowTrendingUpIcon}
+    trend={{
+      value: 0,
+      isPositive: netProfit > 0
+    }}
+  />
+  <StatsCard
+    title="المصروفات"
+    value={`${totalExpenses.toFixed(3)} د`}
+    icon={ArrowTrendingDownIcon}
+    trend={{
+      value: 0,
+      isPositive: false
+    }}
+  />
+  <StatsCard
+    title="عدد الحجوزات"
+    value={String(bookings.length)}
+    icon={ChartBarIcon}
+    trend={null} // استخدام null لإخفاء مؤشر الاتجاه
+  />
+</div>
 
       {/* الرسم البياني */}
       {chartData.length > 0 && (
