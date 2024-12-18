@@ -3,18 +3,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { db } from '@/lib/supabase';
 import moment from 'moment';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend,
-  BarChart,
-  Bar,
-  ResponsiveContainer 
-} from 'recharts';
 import { calculateStats } from '@/lib/utils';
 import StatsCard from '@/components/Stats/StatsCard';
 import {
@@ -56,11 +44,11 @@ export default function StatsPage() {
   });
 
   // تحويل البيانات إلى مصفوفة مرتبة
-  const chartData = Object.values(monthlyData).sort((a, b) => 
-    moment(a.month).diff(moment(b.month))
+  const monthlyStats = Object.values(monthlyData).sort((a, b) => 
+    moment(b.month).diff(moment(a.month))
   ).map(data => ({
     ...data,
-    month: moment(data.month).format('MMMM YYYY'),
+    monthName: moment(data.month).format('MMMM YYYY'),
     netProfit: data.income - data.expenses
   }));
 
@@ -100,64 +88,36 @@ export default function StatsPage() {
         />
       </div>
 
-      {/* الرسوم البيانية */}
-      <div className="space-y-8">
-        {/* رسم بياني للدخل والمصروفات */}
-        <div className="glass-container">
-          <h2 className="text-xl font-bold mb-4 text-white">تحليل الدخل والمصروفات</h2>
-          <div className="h-[400px] text-white">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none' }} />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="income" 
-                  name="الدخل"
-                  stroke="#22c55e" 
-                  strokeWidth={2}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="expenses" 
-                  name="المصروفات"
-                  stroke="#ef4444" 
-                  strokeWidth={2}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="netProfit" 
-                  name="صافي الربح"
-                  stroke="#3b82f6" 
-                  strokeWidth={2}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* رسم بياني للحجوزات */}
-        <div className="glass-container">
-          <h2 className="text-xl font-bold mb-4 text-white">إحصائيات الحجوزات</h2>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none' }} />
-                <Legend />
-                <Bar 
-                  dataKey="bookings" 
-                  name="عدد الحجوزات"
-                  fill="#3b82f6" 
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+      {/* تفاصيل شهرية */}
+      <div className="glass-container">
+        <h2 className="text-xl font-bold mb-6">التقرير الشهري</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="text-right py-3 px-4">الشهر</th>
+                <th className="text-right py-3 px-4">الدخل</th>
+                <th className="text-right py-3 px-4">المصروفات</th>
+                <th className="text-right py-3 px-4">صافي الربح</th>
+                <th className="text-right py-3 px-4">عدد الحجوزات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {monthlyStats.map((month) => (
+                <tr key={month.month} className="border-b border-white/5 hover:bg-white/5">
+                  <td className="py-3 px-4">{month.monthName}</td>
+                  <td className="py-3 px-4">{month.income.toFixed(3)} د</td>
+                  <td className="py-3 px-4">{month.expenses.toFixed(3)} د</td>
+                  <td className="py-3 px-4">
+                    <span className={month.netProfit >= 0 ? 'text-green-400' : 'text-red-400'}>
+                      {month.netProfit.toFixed(3)} د
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">{month.bookings}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </main>
