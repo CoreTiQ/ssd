@@ -649,3 +649,50 @@
     @apply hidden;
   }
 }
+
+
+
+
+/* إضافة هذه الأنماط إلى globals.css */
+.calendar-day {
+  @apply relative bg-white/5 rounded-lg border border-white/10 cursor-pointer
+         transition-all duration-300 hover:bg-white/10
+         min-h-[100px] p-4;
+}
+
+.calendar-day.today {
+  @apply ring-2 ring-blue-500/50;
+}
+
+.calendar-day.booking-full {
+  @apply bg-red-500/10 border-2 border-red-500/20;
+}
+
+.day-number {
+  @apply absolute top-2 right-2
+         flex items-center justify-center
+         h-6 w-6
+         bg-white/10 rounded-full
+         text-white text-sm font-medium;
+}
+
+.booking-badge {
+  @apply text-xs px-2 py-1 rounded-full font-medium;
+}
+
+.booking-badge-morning {
+  @apply bg-blue-500/20 text-blue-200;
+}
+
+.booking-badge-evening {
+  @apply bg-orange-500/20 text-orange-200;
+}
+
+.booking-badge-full {
+  @apply bg-red-500/20 text-red-200;
+}
+
+/* األنماط الجديدة للنافذة المنبثقة */
+.booking-modal {
+  @apply fixed inset-0 flex items-center justify-center p-4;
+}
