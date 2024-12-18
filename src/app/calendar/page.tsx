@@ -19,37 +19,32 @@ function DayCell({ date, bookings }: { date: string; bookings: any[] }) {
       relative aspect-square
       ${isToday ? 'ring-1 ring-blue-500' : ''}
       ${isPast ? 'opacity-60' : ''}
-      flex flex-col justify-between
+      flex flex-col items-center
       rounded-lg overflow-hidden
-      ${hasFullDay ? 'bg-red-950/30' : 
-        (hasMorning && hasEvening) ? 'bg-purple-950/30' :
-        hasMorning ? 'bg-blue-950/30' :
-        hasEvening ? 'bg-orange-950/30' : 
-        'bg-slate-800/40'}
+      bg-slate-800/40
+      hover:bg-slate-700/40
+      transition-colors
     `}>
       {/* رقم اليوم */}
       <div className="p-1.5 text-center">
         <span className="text-sm text-white/80">{dayNumber}</span>
       </div>
 
-      {/* حالة الحجز */}
+      {/* نقاط الحجز */}
       {bookings.length > 0 && (
-        <div className="text-center pb-1 px-0.5">
+        <div className="absolute bottom-2">
           {hasFullDay ? (
-            <div className="text-[8px] text-red-400">
-              كامل
-            </div>
+            // نقطة حمراء للحجز الكامل
+            <div className="w-2 h-2 rounded-full bg-red-500 shadow-sm shadow-red-500/50" />
           ) : (
-            <div className="flex flex-col gap-0.5">
+            <div className="flex gap-1">
               {hasMorning && (
-                <div className="text-[8px] text-blue-400">
-                  صباحي
-                </div>
+                // نقطة زرقاء للحجز الصباحي
+                <div className="w-2 h-2 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50" />
               )}
               {hasEvening && (
-                <div className="text-[8px] text-orange-400">
-                  مسائي
-                </div>
+                // نقطة برتقالية للحجز المسائي
+                <div className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50" />
               )}
             </div>
           )}
@@ -61,7 +56,6 @@ function DayCell({ date, bookings }: { date: string; bookings: any[] }) {
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(moment());
-  const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
   const shortDays = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
 
   const { data: bookings = [], isLoading } = useQuery({
@@ -96,15 +90,15 @@ export default function CalendarPage() {
         {/* دليل الرموز */}
         <div className="flex items-center justify-center gap-3 mb-4 text-[10px]">
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+            <div className="w-2 h-2 rounded-full bg-red-500"></div>
             <span className="text-red-400">يوم كامل</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-blue-500/50"></div>
+            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
             <span className="text-blue-400">صباحي</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-orange-500/50"></div>
+            <div className="w-2 h-2 rounded-full bg-orange-500"></div>
             <span className="text-orange-400">مسائي</span>
           </div>
         </div>
