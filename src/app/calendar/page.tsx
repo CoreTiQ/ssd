@@ -16,44 +16,42 @@ function DayCell({ date, bookings }: { date: string; bookings: any[] }) {
 
   return (
     <div className={`
-      relative rounded-2xl p-3
-      ${isToday ? 'ring-2 ring-blue-500' : ''}
-      ${isPast ? 'opacity-50' : ''}
-      ${hasFullDay ? 'bg-gradient-to-br from-red-950/50 to-red-900/30' : 
-        (hasMorning && hasEvening) ? 'bg-gradient-to-br from-purple-950/50 to-purple-900/30' :
-        hasMorning ? 'bg-gradient-to-br from-blue-950/50 to-blue-900/30' :
-        hasEvening ? 'bg-gradient-to-br from-orange-950/50 to-orange-900/30' : 
-        'bg-slate-800/40'}
-      hover:bg-slate-700/40 transition-all duration-300
-      min-h-[80px] md:min-h-[100px]
+      relative aspect-square
+      ${isToday ? 'ring-1 ring-blue-500' : ''}
+      ${isPast ? 'opacity-60' : ''}
       flex flex-col justify-between
-      border border-white/5
+      rounded-lg overflow-hidden
+      ${hasFullDay ? 'bg-red-950/30' : 
+        (hasMorning && hasEvening) ? 'bg-purple-950/30' :
+        hasMorning ? 'bg-blue-950/30' :
+        hasEvening ? 'bg-orange-950/30' : 
+        'bg-slate-800/40'}
     `}>
       {/* رقم اليوم */}
-      <div className="text-lg md:text-xl font-medium text-white/90">
-        {dayNumber}
+      <div className="p-1.5 text-center">
+        <span className="text-sm text-white/80">{dayNumber}</span>
       </div>
 
       {/* حالة الحجز */}
       {bookings.length > 0 && (
-        <div className="flex flex-col gap-1 mt-1">
+        <div className="text-center pb-1 px-0.5">
           {hasFullDay ? (
-            <div className="text-xs text-red-400/90 font-medium bg-red-500/10 px-2 py-0.5 rounded-full text-center">
-              يوم كامل
+            <div className="text-[8px] text-red-400">
+              كامل
             </div>
           ) : (
-            <>
+            <div className="flex flex-col gap-0.5">
               {hasMorning && (
-                <div className="text-xs text-blue-400/90 font-medium bg-blue-500/10 px-2 py-0.5 rounded-full text-center">
+                <div className="text-[8px] text-blue-400">
                   صباحي
                 </div>
               )}
               {hasEvening && (
-                <div className="text-xs text-orange-400/90 font-medium bg-orange-500/10 px-2 py-0.5 rounded-full text-center">
+                <div className="text-[8px] text-orange-400">
                   مسائي
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       )}
@@ -64,6 +62,7 @@ function DayCell({ date, bookings }: { date: string; bookings: any[] }) {
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(moment());
   const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  const shortDays = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ['bookings'],
@@ -79,52 +78,48 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl p-6 border border-white/5">
+    <div className="max-w-lg mx-auto px-2 py-4">
+      <div className="bg-slate-900/95 rounded-2xl p-3 border border-white/10">
         {/* راس التقويم */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4 px-2">
           <button onClick={() => setCurrentDate(prev => moment(prev).subtract(1, 'month'))}>
-            <ChevronRightIcon className="w-6 h-6 text-white/70 hover:text-white/90" />
+            <ChevronRightIcon className="w-5 h-5 text-white/70" />
           </button>
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-lg font-semibold text-white">
             {currentDate.format('MMMM YYYY')}
           </h2>
           <button onClick={() => setCurrentDate(prev => moment(prev).add(1, 'month'))}>
-            <ChevronLeftIcon className="w-6 h-6 text-white/70 hover:text-white/90" />
+            <ChevronLeftIcon className="w-5 h-5 text-white/70" />
           </button>
         </div>
 
         {/* دليل الرموز */}
-        <div className="flex flex-wrap gap-3 justify-center mb-6">
-          <div className="flex items-center gap-2 text-white/70 text-sm">
-            <div className="w-3 h-3 rounded-full bg-white/20"></div>
-            <span>متاح</span>
+        <div className="flex items-center justify-center gap-3 mb-4 text-[10px]">
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+            <span className="text-red-400">يوم كامل</span>
           </div>
-          <div className="flex items-center gap-2 text-blue-400 text-sm">
-            <div className="w-3 h-3 rounded-full bg-blue-500/20"></div>
-            <span>صباحي</span>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-blue-500/50"></div>
+            <span className="text-blue-400">صباحي</span>
           </div>
-          <div className="flex items-center gap-2 text-orange-400 text-sm">
-            <div className="w-3 h-3 rounded-full bg-orange-500/20"></div>
-            <span>مسائي</span>
-          </div>
-          <div className="flex items-center gap-2 text-red-400 text-sm">
-            <div className="w-3 h-3 rounded-full bg-red-500/20"></div>
-            <span>يوم كامل</span>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full bg-orange-500/50"></div>
+            <span className="text-orange-400">مسائي</span>
           </div>
         </div>
 
         {/* ايام الاسبوع */}
-        <div className="grid grid-cols-7 gap-2 mb-2">
-          {days.map(day => (
-            <div key={day} className="text-center text-sm font-medium text-white/70 py-2">
+        <div className="grid grid-cols-7 gap-1 mb-1">
+          {shortDays.map(day => (
+            <div key={day} className="text-center text-[10px] font-medium text-white/70 py-1">
               {day}
             </div>
           ))}
         </div>
 
         {/* خلايا التقويم */}
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1">
           {Array.from({ length: moment(currentDate).startOf('month').day() }).map((_, i) => (
             <div key={`empty-${i}`} className="aspect-square" />
           ))}
