@@ -3,10 +3,28 @@
 import { useQuery } from '@tanstack/react-query';
 import { db } from '@/lib/supabase';
 import { SimpleStatsCard } from '@/components/Stats/SimpleStatsCard';
-import { BanknotesIcon, CalculatorIcon, UsersIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import {
+  BanknotesIcon,
+  CalculatorIcon,
+  UsersIcon,
+  ChartBarIcon
+} from '@heroicons/react/24/outline';
+
+function formatNumber(num: number) {
+  return num.toFixed(3);
+}
+
+function getBookingTypeText(type: string) {
+  switch (type) {
+    case 'morning': return 'صباحي';
+    case 'evening': return 'مسائي';
+    case 'full': return 'يوم كامل';
+    default: return type;
+  }
+}
 
 export default function StatsPage() {
-  const { data: bookings = [] } = useQuery({
+  const { data: bookings = [], isLoading: bookingsLoading } = useQuery({
     queryKey: ['bookings'],
     queryFn: async () => {
       try {
@@ -18,7 +36,7 @@ export default function StatsPage() {
     }
   });
 
-  const { data: expenses = [] } = useQuery({
+  const { data: expenses = [], isLoading: expensesLoading } = useQuery({
     queryKey: ['expenses'],
     queryFn: async () => {
       try {
@@ -30,11 +48,17 @@ export default function StatsPage() {
     }
   });
 
-  // حساب الإحصائيات الأساسية
+  if (bookingsLoading || expensesLoading) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="text-white text-center">جاري التحميل...</div>
+      </div>
+    );
+  }
+
   const totalIncome = bookings.reduce((sum, booking) => sum + (Number(booking.price) || 0), 0);
   const totalExpenses = expenses.reduce((sum, expense) => sum + (Number(expense.amount) || 0), 0);
   const netProfit = totalIncome - totalExpenses;
-  const totalBookings = bookings.length;
 
   return (
     <div className="container mx-auto p-4">
@@ -43,28 +67,28 @@ export default function StatsPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <SimpleStatsCard
           title="إجمالي الدخل"
-          value={`${totalIncome.toFixed(3)} د`}
+          value={`${formatNumber(totalIncome)} د`}
           icon={BanknotesIcon}
         />
         <SimpleStatsCard
           title="المصروفات"
-          value={`${totalExpenses.toFixed(3)} د`}
+          value={`${formatNumber(totalExpenses)} د`}
           icon={CalculatorIcon}
         />
         <SimpleStatsCard
           title="صافي الربح"
-          value={`${netProfit.toFixed(3)} د`}
+          value={`${formatNumber(netProfit)} د`}
           icon={ChartBarIcon}
         />
         <SimpleStatsCard
           title="عدد الحجوزات"
-          value={totalBookings.toString()}
+          value={bookings.length.toString()}
           icon={UsersIcon}
         />
       </div>
 
       <div className="mt-8 rounded-xl bg-white/5 p-6">
-        <h2 className="mb-4 text-xl font-semibold text-white">تفاصيل المصروفات</h2>
+        <h2 className="mb-4 text-xl font-semibold text-white">سجل المصروفات</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -78,17 +102,24 @@ export default function StatsPage() {
               {expenses.map((expense, index) => (
                 <tr key={index} className="border-b border-white/5 text-white/80">
                   <td className="p-4">{expense.title}</td>
-                  <td className="p-4">{expense.amount?.toFixed(3)} د</td>
+                  <td className="p-4">{formatNumber(expense.amount)} د</td>
                   <td className="p-4">{new Date(expense.date).toLocaleDateString('ar-SA')}</td>
                 </tr>
               ))}
+              {expenses.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="p-4 text-center text-white/60">
+                    لا توجد مصروفات مسجلة
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
       <div className="mt-8 rounded-xl bg-white/5 p-6">
-        <h2 className="mb-4 text-xl font-semibold text-white">تفاصيل الحجوزات</h2>
+        <h2 className="mb-4 text-xl font-semibold text-white">سجل الحجوزات</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -103,15 +134,18 @@ export default function StatsPage() {
               {bookings.map((booking, index) => (
                 <tr key={index} className="border-b border-white/5 text-white/80">
                   <td className="p-4">{booking.client_name}</td>
-                  <td className="p-4">{booking.price.toFixed(3)} د</td>
+                  <td className="p-4">{formatNumber(booking.price)} د</td>
                   <td className="p-4">{new Date(booking.date).toLocaleDateString('ar-SA')}</td>
-                  <td className="p-4">
-                    {booking.booking_type === 'morning' && 'صباحي'}
-                    {booking.booking_type === 'evening' && 'مسائي'}
-                    {booking.booking_type === 'full' && 'يوم كامل'}
-                  </td>
+                  <td className="p-4">{getBookingTypeText(booking.booking_type)}</td>
                 </tr>
               ))}
+              {bookings.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="p-4 text-center text-white/60">
+                    لا توجد حجوزات مسجلة
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
