@@ -2,6 +2,7 @@ import './globals.css';
 import { Providers } from '@/components/Providers';
 import { Toaster } from 'react-hot-toast';
 import localFont from 'next/font/local';
+import Navigation from '@/components/Navigation';
 
 const font = localFont({
   src: './fonts/Cairo-Arabic-Variable.ttf',
@@ -44,14 +45,17 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="theme-color" content="#0f172a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="نظام حجز الفيلا" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className="bg-gradient">
+      <body className="bg-gradient pb-[72px] min-h-screen">
         <Providers>
-          {children}
+          <main className="container mx-auto px-4 py-6">
+            {children}
+          </main>
+          <Navigation />
           <Toaster 
             position="bottom-center"
             toastOptions={{
@@ -59,7 +63,9 @@ export default function RootLayout({
                 background: '#1e293b',
                 color: '#fff',
                 borderRadius: '10px',
+                marginBottom: '80px'
               },
+              duration: 3000,
             }} 
           />
         </Providers>
