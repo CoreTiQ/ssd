@@ -3,10 +3,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { db } from '@/lib/supabase';
 import {
-  BanknotesIcon,
+  UserGroupIcon,
   ChartBarIcon,
   ClipboardDocumentListIcon,
-  PresentationChartLineIcon,
+  BanknotesIcon,
   PrinterIcon
 } from '@heroicons/react/24/outline';
 import moment from 'moment';
@@ -26,14 +26,10 @@ function SimpleStatsCard({
 }) {
   return (
     <div className="stats-card">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-sm text-white/60">{title}</div>
-          <div className="mt-1 text-2xl font-semibold text-white font-mono ltr">{value}</div>
-        </div>
-        <div className="p-2 bg-white/10 rounded-lg">
-          <Icon className="h-5 w-5 text-white/60" />
-        </div>
+      <Icon className="h-5 w-5 text-white/50 mb-2" />
+      <div className="flex flex-col items-end">
+        <div className="text-sm text-white/50 mb-1">{title}</div>
+        <div className="text-xl font-bold text-white font-mono text-left">{value}</div>
       </div>
     </div>
   );
@@ -113,28 +109,52 @@ export default function StatsPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4 print:grid-cols-4">
           <SimpleStatsCard
             title="إجمالي الدخل"
-            value={`${formatNumber(totalIncome)} د`}
+            value={`د ${formatNumber(totalIncome)}`}
             icon={BanknotesIcon}
           />
           <SimpleStatsCard
-            title="المصروفات"
-            value={`${formatNumber(totalExpenses)} د`}
-            icon={ClipboardDocumentListIcon}
+            title="صافي الربح"
+            value={`د ${formatNumber(netProfit)}`}
+            icon={ChartBarIcon}
           />
           <SimpleStatsCard
-            title="صافي الربح"
-            value={`${formatNumber(netProfit)} د`}
-            icon={ChartBarIcon}
+            title="المصروفات"
+            value={`د ${formatNumber(totalExpenses)}`}
+            icon={ClipboardDocumentListIcon}
           />
           <SimpleStatsCard
             title="عدد الحجوزات"
             value={bookings.length.toString()}
-            icon={PresentationChartLineIcon}
+            icon={UserGroupIcon}
           />
         </div>
 
         <div className="data-table mt-8">
-          <h2 className="mb-4 text-xl font-semibold text-white">سجل الحجوزات</h2>
+          <h2 className="section-title">سجل المصروفات</h2>
+          <div className="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>العنوان</th>
+                  <th>المبلغ</th>
+                  <th>التاريخ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {expenses.map((expense, index) => (
+                  <tr key={index}>
+                    <td>{expense.title}</td>
+                    <td className="font-mono text-left">د {formatNumber(expense.amount)}</td>
+                    <td className="font-mono text-left">{formatDate(expense.date)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="data-table mt-8">
+          <h2 className="section-title">سجل الحجوزات</h2>
           <div className="overflow-x-auto">
             <table>
               <thead>
@@ -149,33 +169,9 @@ export default function StatsPage() {
                 {bookings.map((booking, index) => (
                   <tr key={index}>
                     <td>{booking.client_name}</td>
-                    <td className="font-mono ltr">{formatNumber(booking.price)} د</td>
-                    <td className="font-mono ltr">{formatDate(booking.date)}</td>
+                    <td className="font-mono text-left">د {formatNumber(booking.price)}</td>
+                    <td className="font-mono text-left">{formatDate(booking.date)}</td>
                     <td>{getBookingTypeText(booking.booking_type)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="data-table mt-8">
-          <h2 className="mb-4 text-xl font-semibold text-white">سجل المصروفات</h2>
-          <div className="overflow-x-auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>العنوان</th>
-                  <th>المبلغ</th>
-                  <th>التاريخ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenses.map((expense, index) => (
-                  <tr key={index}>
-                    <td>{expense.title}</td>
-                    <td className="font-mono ltr">{formatNumber(expense.amount)} د</td>
-                    <td className="font-mono ltr">{formatDate(expense.date)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -186,16 +182,23 @@ export default function StatsPage() {
 
       <style jsx>{`
         .stats-card {
-          @apply rounded-xl bg-[#1e293b] p-6 border border-white/10 hover:bg-[#1e293b]/80 transition-all duration-300;
+          @apply bg-[#1e293b]/50 backdrop-blur-sm rounded-2xl p-6
+                 border border-white/5 flex flex-col
+                 hover:bg-[#1e293b]/70 transition-all duration-300;
         }
 
         .print-button {
-          @apply flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg 
-                 transition-colors text-white print:hidden;
+          @apply flex items-center gap-2 px-4 py-2 bg-[#1e293b]/50 
+                 hover:bg-[#1e293b]/70 rounded-lg transition-colors 
+                 text-white print:hidden border border-white/5;
+        }
+
+        .section-title {
+          @apply text-lg font-bold text-white mb-4;
         }
 
         .data-table {
-          @apply rounded-xl bg-[#1e293b] p-6 border border-white/10;
+          @apply bg-[#1e293b]/50 backdrop-blur-sm rounded-2xl p-6 border border-white/5;
         }
 
         .data-table table {
@@ -203,24 +206,16 @@ export default function StatsPage() {
         }
 
         .data-table th {
-          @apply p-4 text-right border-b border-white/10 text-white font-medium bg-[#1e293b];
+          @apply p-4 text-right text-white/60 font-medium bg-transparent
+                 border-b border-white/10;
         }
 
         .data-table td {
-          @apply p-4 text-right border-b border-white/5 text-white/80;
+          @apply p-4 text-right text-white border-b border-white/5;
         }
 
         .data-table tr:hover td {
           @apply bg-white/5;
-        }
-
-        .ltr {
-          direction: ltr;
-          text-align: right;
-        }
-
-        .font-mono {
-          font-family: monospace;
         }
 
         @media print {
@@ -241,21 +236,9 @@ export default function StatsPage() {
           }
 
           .stats-card div,
+          .section-title,
           .data-table th,
           .data-table td {
-            color: black !important;
-          }
-
-          .data-table th {
-            background: #f5f5f5 !important;
-            border: 1px solid #ddd !important;
-          }
-
-          .data-table td {
-            border: 1px solid #ddd !important;
-          }
-
-          h1, h2 {
             color: black !important;
           }
         }
