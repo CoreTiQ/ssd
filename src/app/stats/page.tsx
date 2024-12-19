@@ -29,7 +29,7 @@ function SimpleStatsCard({
       <div className="flex items-start justify-between">
         <div>
           <div className="text-sm text-white/60">{title}</div>
-          <div className="mt-1 text-2xl font-semibold text-white">{value}</div>
+          <div className="mt-1 text-2xl font-semibold text-white font-mono ltr">{value}</div>
         </div>
         <div className="p-2 bg-white/10 rounded-lg">
           <Icon className="h-5 w-5 text-white/60" />
@@ -40,7 +40,10 @@ function SimpleStatsCard({
 }
 
 function formatNumber(num: number) {
-  return isNaN(num) ? '0.000' : num.toFixed(3);
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3
+  }).format(num || 0);
 }
 
 function formatDate(date: string) {
@@ -146,18 +149,11 @@ export default function StatsPage() {
                 {bookings.map((booking, index) => (
                   <tr key={index}>
                     <td>{booking.client_name}</td>
-                    <td>{formatNumber(booking.price)} د</td>
-                    <td>{formatDate(booking.date)}</td>
+                    <td className="font-mono ltr">{formatNumber(booking.price)} د</td>
+                    <td className="font-mono ltr">{formatDate(booking.date)}</td>
                     <td>{getBookingTypeText(booking.booking_type)}</td>
                   </tr>
                 ))}
-                {bookings.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="empty-message">
-                      لا توجد حجوزات مسجلة
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
@@ -178,17 +174,10 @@ export default function StatsPage() {
                 {expenses.map((expense, index) => (
                   <tr key={index}>
                     <td>{expense.title}</td>
-                    <td>{formatNumber(expense.amount)} د</td>
-                    <td>{formatDate(expense.date)}</td>
+                    <td className="font-mono ltr">{formatNumber(expense.amount)} د</td>
+                    <td className="font-mono ltr">{formatDate(expense.date)}</td>
                   </tr>
                 ))}
-                {expenses.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className="empty-message">
-                      لا توجد مصروفات مسجلة
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
@@ -197,7 +186,7 @@ export default function StatsPage() {
 
       <style jsx>{`
         .stats-card {
-          @apply rounded-xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition-all duration-300;
+          @apply rounded-xl bg-[#1e293b] p-6 border border-white/10 hover:bg-[#1e293b]/80 transition-all duration-300;
         }
 
         .print-button {
@@ -206,7 +195,7 @@ export default function StatsPage() {
         }
 
         .data-table {
-          @apply rounded-xl bg-white/5 p-6 border border-white/10;
+          @apply rounded-xl bg-[#1e293b] p-6 border border-white/10;
         }
 
         .data-table table {
@@ -214,7 +203,7 @@ export default function StatsPage() {
         }
 
         .data-table th {
-          @apply p-4 text-right border-b border-white/10 text-white font-medium bg-white/5;
+          @apply p-4 text-right border-b border-white/10 text-white font-medium bg-[#1e293b];
         }
 
         .data-table td {
@@ -225,8 +214,13 @@ export default function StatsPage() {
           @apply bg-white/5;
         }
 
-        .empty-message {
-          @apply text-center text-white/60;
+        .ltr {
+          direction: ltr;
+          text-align: right;
+        }
+
+        .font-mono {
+          font-family: monospace;
         }
 
         @media print {
@@ -240,51 +234,29 @@ export default function StatsPage() {
             padding: 20px !important;
           }
 
-          .stats-card {
+          .stats-card,
+          .data-table {
             background: white !important;
             border: 1px solid #eee !important;
           }
 
-          .stats-card div {
+          .stats-card div,
+          .data-table th,
+          .data-table td {
             color: black !important;
-          }
-
-          .data-table {
-            background: white !important;
-            border: none !important;
-            margin-top: 30px !important;
           }
 
           .data-table th {
             background: #f5f5f5 !important;
-            color: black !important;
             border: 1px solid #ddd !important;
           }
 
           .data-table td {
-            color: black !important;
             border: 1px solid #ddd !important;
-          }
-
-          .data-table tr:hover td {
-            background: none !important;
           }
 
           h1, h2 {
             color: black !important;
-          }
-
-          table {
-            page-break-inside: auto;
-          }
-
-          tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
-          }
-
-          .empty-message {
-            color: #666 !important;
           }
         }
       `}</style>
