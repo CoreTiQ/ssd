@@ -4,13 +4,16 @@ import { useQuery } from '@tanstack/react-query';
 import { db } from '@/lib/supabase';
 import {
   BanknotesIcon,
-  CalculatorIcon,
-  UsersIcon,
   ChartBarIcon,
+  ClipboardDocumentListIcon,
+  PresentationChartLineIcon,
   PrinterIcon
 } from '@heroicons/react/24/outline';
 import moment from 'moment';
+import 'moment/locale/ar';
 import type { ComponentProps } from 'react';
+
+moment.locale('ar');
 
 function SimpleStatsCard({ 
   title, 
@@ -37,7 +40,7 @@ function SimpleStatsCard({
 }
 
 function formatNumber(num: number) {
-  return num.toFixed(3);
+  return isNaN(num) ? '0.000' : num.toFixed(3);
 }
 
 function formatDate(date: string) {
@@ -51,10 +54,6 @@ function getBookingTypeText(type: string) {
     case 'full': return 'يوم كامل';
     default: return type;
   }
-}
-
-function handlePrint() {
-  window.print();
 }
 
 export default function StatsPage() {
@@ -100,7 +99,7 @@ export default function StatsPage() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-white">لوحة الإحصائيات</h1>
           <button
-            onClick={handlePrint}
+            onClick={() => window.print()}
             className="print-button"
           >
             <PrinterIcon className="h-5 w-5" />
@@ -117,7 +116,7 @@ export default function StatsPage() {
           <SimpleStatsCard
             title="المصروفات"
             value={`${formatNumber(totalExpenses)} د`}
-            icon={CalculatorIcon}
+            icon={ClipboardDocumentListIcon}
           />
           <SimpleStatsCard
             title="صافي الربح"
@@ -127,39 +126,8 @@ export default function StatsPage() {
           <SimpleStatsCard
             title="عدد الحجوزات"
             value={bookings.length.toString()}
-            icon={UsersIcon}
+            icon={PresentationChartLineIcon}
           />
-        </div>
-
-        <div className="data-table mt-8">
-          <h2 className="mb-4 text-xl font-semibold text-white">سجل المصروفات</h2>
-          <div className="overflow-x-auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>العنوان</th>
-                  <th>المبلغ</th>
-                  <th>التاريخ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenses.map((expense, index) => (
-                  <tr key={index}>
-                    <td>{expense.title}</td>
-                    <td>{formatNumber(expense.amount)} د</td>
-                    <td>{formatDate(expense.date)}</td>
-                  </tr>
-                ))}
-                {expenses.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className="text-center">
-                      لا توجد مصروفات مسجلة
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
         </div>
 
         <div className="data-table mt-8">
@@ -185,8 +153,39 @@ export default function StatsPage() {
                 ))}
                 {bookings.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="text-center">
+                    <td colSpan={4} className="empty-message">
                       لا توجد حجوزات مسجلة
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="data-table mt-8">
+          <h2 className="mb-4 text-xl font-semibold text-white">سجل المصروفات</h2>
+          <div className="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>العنوان</th>
+                  <th>المبلغ</th>
+                  <th>التاريخ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {expenses.map((expense, index) => (
+                  <tr key={index}>
+                    <td>{expense.title}</td>
+                    <td>{formatNumber(expense.amount)} د</td>
+                    <td>{formatDate(expense.date)}</td>
+                  </tr>
+                ))}
+                {expenses.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="empty-message">
+                      لا توجد مصروفات مسجلة
                     </td>
                   </tr>
                 )}
@@ -198,7 +197,7 @@ export default function StatsPage() {
 
       <style jsx>{`
         .stats-card {
-          @apply rounded-xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition-colors;
+          @apply rounded-xl bg-white/5 p-6 border border-white/10 hover:bg-white/10 transition-all duration-300;
         }
 
         .print-button {
@@ -211,11 +210,11 @@ export default function StatsPage() {
         }
 
         .data-table table {
-          @apply w-full;
+          @apply w-full border-collapse;
         }
 
         .data-table th {
-          @apply p-4 text-right border-b border-white/10 text-white;
+          @apply p-4 text-right border-b border-white/10 text-white font-medium bg-white/5;
         }
 
         .data-table td {
@@ -226,6 +225,10 @@ export default function StatsPage() {
           @apply bg-white/5;
         }
 
+        .empty-message {
+          @apply text-center text-white/60;
+        }
+
         @media print {
           :global(body) {
             background: white !important;
@@ -234,7 +237,7 @@ export default function StatsPage() {
 
           :global(.container) {
             max-width: none !important;
-            padding: 0 !important;
+            padding: 20px !important;
           }
 
           .stats-card {
@@ -249,12 +252,22 @@ export default function StatsPage() {
           .data-table {
             background: white !important;
             border: none !important;
+            margin-top: 30px !important;
           }
 
-          .data-table th,
+          .data-table th {
+            background: #f5f5f5 !important;
+            color: black !important;
+            border: 1px solid #ddd !important;
+          }
+
           .data-table td {
             color: black !important;
-            border-color: #ddd !important;
+            border: 1px solid #ddd !important;
+          }
+
+          .data-table tr:hover td {
+            background: none !important;
           }
 
           h1, h2 {
@@ -268,6 +281,10 @@ export default function StatsPage() {
           tr {
             page-break-inside: avoid;
             page-break-after: auto;
+          }
+
+          .empty-message {
+            color: #666 !important;
           }
         }
       `}</style>
