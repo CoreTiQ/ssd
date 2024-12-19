@@ -9,7 +9,8 @@ import {
   BanknotesIcon,
   CalculatorIcon,
   UsersIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  PrinterIcon
 } from '@heroicons/react/24/outline';
 
 // مكون البطاقة الإحصائية
@@ -52,6 +53,158 @@ function getBookingTypeText(type: string) {
     case 'full': return 'يوم كامل';
     default: return type;
   }
+}
+
+// دالة الطباعة
+function handlePrint(bookings: any[], expenses: any[], totalIncome: number, totalExpenses: number, netProfit: number) {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  const html = `
+    <!DOCTYPE html>
+    <html dir="rtl">
+      <head>
+        <title>تقرير الإحصائيات</title>
+        <meta charset="utf-8">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            direction: rtl;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: right;
+          }
+          th {
+            background-color: #f8f9fa;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+          }
+          .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+          }
+          .stat-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+          }
+          .stat-title {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+          }
+          .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+          }
+          .section-title {
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+          }
+          .timestamp {
+            text-align: left;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>تقرير الإحصائيات</h1>
+          <p>${formatDate(moment().format('YYYY-MM-DD'))}</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-title">إجمالي الدخل</div>
+            <div class="stat-value">${formatNumber(totalIncome)} د</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">المصروفات</div>
+            <div class="stat-value">${formatNumber(totalExpenses)} د</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">صافي الربح</div>
+            <div class="stat-value">${formatNumber(netProfit)} د</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">عدد الحجوزات</div>
+            <div class="stat-value">${bookings.length}</div>
+          </div>
+        </div>
+
+        <h2 class="section-title">سجل الحجوزات</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>العميل</th>
+              <th>المبلغ</th>
+              <th>التاريخ</th>
+              <th>النوع</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${bookings.map(booking => `
+              <tr>
+                <td>${booking.client_name}</td>
+                <td>${formatNumber(booking.price)} د</td>
+                <td>${formatDate(booking.date)}</td>
+                <td>${getBookingTypeText(booking.booking_type)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <h2 class="section-title">سجل المصروفات</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>العنوان</th>
+              <th>المبلغ</th>
+              <th>التاريخ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${expenses.map(expense => `
+              <tr>
+                <td>${expense.title}</td>
+                <td>${formatNumber(expense.amount)} د</td>
+                <td>${formatDate(expense.date)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <div class="timestamp">
+          تم إنشاء هذا التقرير في: ${moment().format('YYYY/MM/DD HH:mm:ss')}
+        </div>
+      </body>
+    </html>
+  `;
+
+  printWindow.document.write(html);
+  printWindow.document.close();
+  printWindow.onload = () => {
+    printWindow.print();
+  };
 }
 
 export default function StatsPage() {
@@ -182,6 +335,15 @@ export default function StatsPage() {
             </table>
           </div>
         </div>
+
+        {/* زر الطباعة */}
+        <button
+          onClick={() => handlePrint(bookings, expenses, totalIncome, totalExpenses, netProfit)}
+          className="fixed bottom-6 left-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 shadow-lg transition-colors"
+          title="طباعة التقرير"
+        >
+          <PrinterIcon className="w-6 h-6" />
+        </button>
       </div>
     </div>
   );
