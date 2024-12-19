@@ -39,7 +39,7 @@ function PinScreen({ onSuccess }: { onSuccess: () => void }) {
 
     if (index === 3 && value) {
       const fullPin = [...newPin.slice(0, 3), value].join('');
-      if (fullPin === '1234') {
+      if (fullPin === '5544') {
         onSuccess();
       } else {
         setError(true);

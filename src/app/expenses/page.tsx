@@ -25,7 +25,7 @@ function PinInput({ onSubmit }: { onSubmit: (pin: string) => void }) {
     // التحقق من اكتمال الرمز
     if (index === 3 && value !== '') {
       const fullPin = [...newPin.slice(0, 3), value].join('');
-      if (fullPin === '1963') { // يمكنك تغيير كلمة المرور هنا
+      if (fullPin === '5544') { // يمكنك تغيير كلمة المرور هنا
         onSubmit(fullPin);
       } else {
         setError(true);
